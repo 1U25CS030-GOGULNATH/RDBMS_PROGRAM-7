@@ -1,4 +1,4 @@
-
+drop database if exists college; 
 create database college;
 use college;
 
@@ -8,7 +8,7 @@ CREATE TABLE Marksheet (
     Department VARCHAR(20),
     Marks INT
 );
-
+desc Marksheet;
 INSERT INTO Marksheet (RollNo, Name, Department, Marks)
 VALUES
 (1, 'Arun', 'CSE', 85),
