@@ -1,4 +1,4 @@
-drop database exists college;
+
 create database college;
 use college;
 
