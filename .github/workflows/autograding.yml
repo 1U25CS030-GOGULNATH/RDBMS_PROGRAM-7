@@ -1,0 +1,82 @@
+name: SQL Autograding
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  autograding:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: studentdb
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install MySQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL
+        run: |
+          until mysqladmin ping -h 127.0.0.1 -uroot -proot --silent
+          do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Run Student SQL
+        run: |
+          mysql -h 127.0.0.1 -uroot -proot studentdb < starter.sql
+
+      - name: Run Tests
+        run: |
+          mysql -h 127.0.0.1 -uroot -proot studentdb < test.sql > test_output.txt
+
+      - name: Display Test Results
+        run: |
+          cat test_output.txt
+
+      - name: Validate Records
+        run: |
+          RESULT=$(mysql -h 127.0.0.1 -uroot -proot studentdb -N -e "
+          SELECT COUNT(*)
+          FROM Marksheet
+          WHERE RollNo = 1
+          AND Name = 'Arun'
+          AND Department = 'CSE'
+          AND Marks = 85;
+          ")
+
+          if [ "$RESULT" -ne 1 ]; then
+            echo "FAIL: Arun record is incorrect"
+            exit 1
+          fi
+
+          RESULT=$(mysql -h 127.0.0.1 -uroot -proot studentdb -N -e "
+          SELECT COUNT(*)
+          FROM Marksheet
+          WHERE Marks > 80;
+          ")
+
+          if [ "$RESULT" -ne 3 ]; then
+            echo "FAIL: Marks > 80 condition is incorrect"
+            exit 1
+          fi
+
+          echo "PASS: All basic tests passed!"
