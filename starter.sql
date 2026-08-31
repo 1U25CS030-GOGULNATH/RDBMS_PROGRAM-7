@@ -18,4 +18,4 @@ VALUES
 (5, 'Rahul', 'IT', 88);
 
 
-select * from marksheet where marks>80 order by marks DESC;
+select * from Marksheet where Marks>80 order by Marks DESC;
