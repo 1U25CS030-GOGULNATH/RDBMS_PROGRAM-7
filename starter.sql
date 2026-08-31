@@ -1,15 +1,11 @@
- 
-create database college12;
-use college12;
-
-CREATE TABLE Marksheet1 (
+CREATE TABLE Marksheet (
     RollNo INT PRIMARY KEY,
     Name VARCHAR(50),
     Department VARCHAR(20),
     Marks INT
 );
-desc Marksheet1;
-INSERT INTO Marksheet1 (RollNo, Name, Department, Marks)
+
+INSERT INTO Marksheet (RollNo, Name, Department, Marks)
 VALUES
 (1, 'Arun', 'CSE', 85),
 (2, 'Divya', 'IT', 78),
@@ -17,5 +13,7 @@ VALUES
 (4, 'Nisha', 'ECE', 67),
 (5, 'Rahul', 'IT', 88);
 
-
-select * from Marksheet1 where Marks>80 order by Marks DESC;
+SELECT RollNo, Name, Department, Marks
+FROM Marksheet
+WHERE Marks > 80
+ORDER BY Marks DESC;
