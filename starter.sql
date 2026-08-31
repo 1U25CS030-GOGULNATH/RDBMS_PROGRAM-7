@@ -1,6 +1,6 @@
-drop database if exists college1; 
-create database college1;
-use college1;
+ 
+create database college12;
+use college12;
 
 CREATE TABLE Marksheet1 (
     RollNo INT PRIMARY KEY,
